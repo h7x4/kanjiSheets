@@ -1,0 +1,31 @@
+
+\newgeometry{left=-1cm, right=-1cm, bottom=-1cm, top=-1cm}
+
+\resizebox{\textwidth}{!}{
+  \begin{tikzpicture}
+    \clip (-12,-14) rectangle (12,19.1);
+    \draw (0,0) node {\input{./title/kanjiTable.tex}};
+    \draw(0,8.15) node {
+      \resizebox{0.435\textwidth}{!}{
+        \begin{tikzpicture}
+          \fill[white] (0,0) rectangle (1,1);
+          \draw (0.5,0.7) node{漢字};
+          \draw (0.5,0.3) node{練習};
+        \end{tikzpicture}
+      }          
+    };
+  \end{tikzpicture}
+}
+
+
+
+
+% \resizebox{\textwidth}{!}{
+%   \begin{tikzpicture}
+%     \draw (0,0.4) node{漢字};
+%     \draw (0,0) node{練習};
+%     \draw()
+%   \end{tikzpicture}
+% }
+
+\restoregeometry

@@ -1,0 +1,71 @@
+% !TEX program = xelatex
+
+\documentclass{article}
+\usepackage{fontspec}
+\usepackage{hyperref}
+\hypersetup{
+    colorlinks=true,
+    linkcolor=blue,
+    filecolor=blue,      
+    urlcolor=blue,
+}
+
+\usepackage{geometry}
+\geometry{
+  a4paper,
+  left=20mm,
+  right=20mm,
+  top=20mm,
+}
+
+\usepackage[japanese]{babel}
+\usepackage{xeCJK}
+\setCJKmainfont{Noto Sans Mono CJK JP}
+\setmainfont{Open Sans}
+
+\input{./kanjiLib.tex}
+
+\setlength{\parindent}{0pt}
+
+\usepackage{etoc}      
+
+\begin{document}
+
+\input{./title/titlepage.tex}
+
+\break
+
+\tableofcontents
+\break
+
+\section*{Preface}
+
+Thanks to for making both the Choumei font and the variant containing stroke order numbers. You can find his work at \url{https://www.nihilist.org.uk/}
+
+Metadata is taken from \url{https://jisho.org/}
+
+This is a list of all kanji in N5 (according to \href{http://www.tanos.co.uk/jlpt/skills/kanji/}{tanos.co.uk})
+
+\break
+
+\jlptSection{n5}
+
+\input{./data/pages/n5.tex}
+
+\jlptSection{n4}
+
+% \input{./data/pages/n4.tex}
+
+\jlptSection{n3}
+
+% \input{./data/pages/n3.tex}
+
+\jlptSection{n2}
+
+% \input{./data/pages/n2.tex}
+
+\jlptSection{n1}
+
+% \input{./data/pages/n1.tex}
+
+\end{document}
