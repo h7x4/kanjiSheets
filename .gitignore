@@ -2,7 +2,9 @@ main.out
 main.log
 main.aux
 main.synctex.gz
+main.toc
 
 testing/
 data/pages/
 data/tables/
+jishoScrape/node_modules
