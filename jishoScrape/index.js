@@ -8,19 +8,20 @@ const {kanjiTable} = require('./src/kanjiTables.js');
 /* Encapsulate main process in async function */
 async function main(jlptLevel) {
 
+  const jlptLevelCaps = jlptLevel.toUpperCase();
+
   const kanjiArray = await fetchKanjiFromTxt(`./data/txt/${jlptLevel}.txt`);
-  console.log(`Fetched txt for ${jlptLevel}`);
+  console.log(`${jlptLevelCaps}: Fetched txt`);
 
   const results = await fetchKanjiFromJisho(kanjiArray);
-  console.log(`Fetched data from Jisho for ${jlptLevel}`);
+  console.log(`${jlptLevelCaps}: Fetched Jisho data`);
 
-  const sortedResults = sortKanji(results);
-  const sortedKanji = sortedResults.map(result => result.query);
-  const texData = getKanjiTexData(sortedResults);
-  console.log(`Processed pages for ${jlptLevel}`);
+  const sortedKanjiArray = results.map(result => result.query);
+  const texData = getKanjiTexData(results);
+  console.log(`${jlptLevelCaps}: Processed pages`);
 
-  const resultTable = kanjiTable(sortedKanji);
-  console.log(`Processed table for ${jlptLevel}`);
+  const resultTable = kanjiTable(sortedKanjiArray);
+  console.log(`${jlptLevelCaps}: Processed table`);
 
   let resultPage = '';
   for (kanji of texData) {
@@ -32,8 +33,8 @@ async function main(jlptLevel) {
       \\newpage\n`;
   }
 
-  fs.writeFile(`../data/tables/${jlptLevel}.tex`, resultTable, (err) => {if (err) console.error(err)});
-  fs.writeFile(`../data/pages/${jlptLevel}.tex`, resultPage, (err) => {if (err) console.error(err)});
+  fs.writeFile(`./data/tables/${jlptLevel}.tex`, resultTable, (err) => {if (err) console.error(err)});
+  fs.writeFile(`./data/pages/${jlptLevel}.tex`, resultPage, (err) => {if (err) console.error(err)});
 }
 
 async function mainWrapper() {

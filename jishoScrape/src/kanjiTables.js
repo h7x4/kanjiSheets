@@ -1,5 +1,5 @@
 function kanjiTable(kanjiArray) {
-  const xLength = 20;
+  const xLength = 15;
   const yLength = Math.ceil(kanjiArray.length/xLength);
   const sideLength = Math.ceil(Math.sqrt(kanjiArray.length));
 
@@ -9,7 +9,7 @@ function kanjiTable(kanjiArray) {
     const lineArray = new Array;
 
     for (let x_index = 0; x_index < xLength; x_index++) {
-      const indexNumber = y_index * yLength + x_index;
+      const indexNumber = y_index * xLength + x_index;
       lineArray.push(kanjiArray[indexNumber] ? kanjiArray[indexNumber] : '');
     }
 
