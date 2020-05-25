@@ -1,6 +1,6 @@
 const fs = require('fs');
 
-/* Local files */
+/* Import local files */
 const {fetchKanjiFromTxt, fetchKanjiFromJisho} = require('./src/dataFetching.js');
 const {getKanjiTexData} = require('./src/texConversion.js');
 const {kanjiTable} = require('./src/kanjiTables.js');
@@ -13,11 +13,11 @@ async function main(jlptLevel) {
   const kanjiArray = await fetchKanjiFromTxt(`./data/txt/${jlptLevel}.txt`);
   console.log(`${jlptLevelCaps}: Fetched txt`);
 
-  const results = await fetchKanjiFromJisho(kanjiArray);
+  const jishoResults = await fetchKanjiFromJisho(kanjiArray);
   console.log(`${jlptLevelCaps}: Fetched Jisho data`);
 
-  const sortedKanjiArray = results.map(result => result.query);
-  const texData = getKanjiTexData(results);
+  const sortedKanjiArray = jishoResults.map(result => result.query);
+  const texData = getKanjiTexData(jishoResults);
   console.log(`${jlptLevelCaps}: Processed pages`);
 
   const resultTable = kanjiTable(sortedKanjiArray);
@@ -37,7 +37,8 @@ async function main(jlptLevel) {
   fs.writeFile(`./data/pages/${jlptLevel}.tex`, resultPage, (err) => {if (err) console.error(err)});
 }
 
-async function mainWrapper() {
+/* Handle args */
+async function argWrapper() {
 
   try {
     if (!/n\d/.test(process.argv[2])) throw 'Input not valid';
@@ -47,4 +48,4 @@ async function mainWrapper() {
   }
 }
 
-mainWrapper();
+argWrapper();

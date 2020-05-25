@@ -1,7 +1,6 @@
 % !TEX program = xelatex
 
 \documentclass{article}
-\usepackage{fontspec}
 \usepackage{hyperref}
 \hypersetup{
     colorlinks=true,
@@ -18,18 +17,21 @@
   top=20mm,
 }
 
+\setlength{\parskip}{0.5em}
+\setlength{\parindent}{0pt}
+
 \usepackage{longtable} %N1 table is too long.
 
+%Japanese typesetting and fonts
 \usepackage[japanese]{babel}
 \usepackage{xeCJK}
+\usepackage{fontspec}
 \setCJKmainfont{Noto Sans Mono CJK JP}
 \setmainfont{Open Sans}
 
 \input{./kanjiLib.tex}
 
-\setlength{\parindent}{0pt}
-
-\usepackage{etoc}      
+\usepackage{etoc} %For local tocs containing level based kanji list.
 
 \begin{document}
 
@@ -44,11 +46,11 @@
 
 %TODO: Add more detailed information
 
-Thanks to for making both the Choumei font and the variant containing stroke order numbers. You can find his work at \url{https://www.nihilist.org.uk/}
+Thanks to Timothy Eyre for making the Choumei font and the edition containing stroke order numbers. You can find his work at \url{https://www.nihilist.org.uk/}
 
-Metadata is taken from \url{https://jisho.org/}
+Kanji data is taken from \url{https://jisho.org/}
 
-This is a list of all kanji in N5 (according to \href{http://www.tanos.co.uk/jlpt/skills/kanji/}{tanos.co.uk})
+This document splits the kanjis into JLPT levels. Please note that there is no official list of kanji JLPT levels. This list is based on \href{http://www.tanos.co.uk/jlpt/skills/kanji/}{tanos.co.uk}.
 
 \break
 
