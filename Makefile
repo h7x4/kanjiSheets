@@ -8,14 +8,22 @@ main.pdf: main.tex jishoScrape/index.js title/titlepage.tex $(wildcard data/page
 
 jishoScrape/index.js: $(wildcard jishoScrape/src/*.js)
 
-data/pages/n%.tex:  data/txt/n%.txt jishoScrape/index.js
-	node jishoScrape/index.js n%
+# data/pages/n%.tex:  data/txt/n%.txt jishoScrape/index.js
+# 	node jishoScrape/index.js n%
 
-data/tables/n%.tex:  data/txt/n%.txt jishoScrape/index.js
-	node jishoScrape/index.js n%
+# data/tables/n%.tex:  data/txt/n%.txt jishoScrape/index.js
+# 	node jishoScrape/index.js n%
 
-.PHONY: clean main.pdf
+.PHONY: clean main.pdf folders
 clean:
 	rm data/pages/*
 	rm data/tables/*
 	rm main.aux main.log main.out main.toc main.synctex.gz
+
+folders:
+	mkdir data/pages
+	mkdir data/tables
+	mkdir data/testing
+	cd jishoScrape
+	npm install
+	cd ..
