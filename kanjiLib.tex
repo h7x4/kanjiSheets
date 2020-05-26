@@ -84,7 +84,7 @@
 %                                    Meaning                                   %
 % ---------------------------------------------------------------------------- %
 
-\newtcolorbox{meaningBox}{
+\newtcolorbox{meaningBox}{ %TODO: Make the box autoshrink horizontally while still making newlines when it's full.
   enhanced,
   colback=black!20,
   left=15pt,
@@ -155,8 +155,14 @@
 %                               Kanji Drawing Box                              %
 % ---------------------------------------------------------------------------- %
 
-\newCJKfontfamily\drawingKanji{Choumei}
-\newCJKfontfamily\drawingFirstKanji{KanjiStrokeOrders}
+\newCJKfontfamily\drawingKanji[
+  Path = {./font/},
+  Extension = .ttf,
+]{Choumei}
+\newCJKfontfamily\drawingFirstKanji[
+  Path = {./font/},
+  Extension = .ttf,
+]{KanjiStrokeOrders}
 
 \newcommand{\kanjiRow}[1]{
   \resizebox{\textwidth}{!}{
