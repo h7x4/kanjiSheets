@@ -20,7 +20,7 @@
 \setlength{\parskip}{0.5em}
 \setlength{\parindent}{0pt}
 
-\usepackage{longtable} %N1 table is too long.
+\usepackage{longtable} % For multipage tables
 
 %Japanese typesetting and fonts
 \usepackage[japanese]{babel}
@@ -31,47 +31,47 @@
 
 \input{./kanjiLib.tex}
 
-\usepackage{etoc} %For local tocs containing level based kanji list.
+\usepackage{etoc} % For local tocs containing level based kanji list.
 
 \begin{document}
 
-\input{./title/titlepage.tex}
+  \input{./title/titlepage.tex}
 
-\break
+  \break
 
-\tableofcontents
-\break
+  \tableofcontents
+  \break
 
-\section*{Preface}
+  \section*{Preface}
 
-%TODO: Add more detailed information
+  %TODO: Add more detailed information
 
-Thanks to Timothy Eyre for making the Choumei font and the edition containing stroke order numbers. You can find his work at \url{https://www.nihilist.org.uk/}
+  Thanks to Timothy Eyre for making the Choumei font and the edition containing stroke order numbers. You can find his work at \url{https://www.nihilist.org.uk/}
 
-Kanji data is taken from \url{https://jisho.org/}
+  Kanji data is taken from \url{https://jisho.org/}
 
-This document splits the kanjis into JLPT levels. Please note that there is no official list of kanji JLPT levels. This list is based on \href{http://www.tanos.co.uk/jlpt/skills/kanji/}{tanos.co.uk}.
+  This document splits the kanjis into JLPT levels. Please note that there is no official list of kanji JLPT levels. This list is based on \href{http://www.tanos.co.uk/jlpt/skills/kanji/}{tanos.co.uk}.
 
-\break
+  \break
 
-\jlptSection{n5}
+  \jlptSection{n5}
 
-\input{./data/testing/test.tex}
+  \input{./data/testing/test.tex}
 
-\jlptSection{n4}
+  \jlptSection{n4}
 
-% \input{./data/pages/n4.tex}
+  % \input{./data/pages/n4.tex}
 
-\jlptSection{n3}
+  \jlptSection{n3}
 
-% \input{./data/pages/n3.tex}
+  % \input{./data/pages/n3.tex}
 
-\jlptSection{n2}
+  \jlptSection{n2}
 
-% \input{./data/pages/n2.tex}
+  % \input{./data/pages/n2.tex}
 
-\jlptSection{n1}
+  \jlptSection{n1}
 
-% \input{./data/pages/n1.tex}
+  % \input{./data/pages/n1.tex}
 
 \end{document}

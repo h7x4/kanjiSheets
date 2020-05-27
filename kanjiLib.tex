@@ -12,9 +12,10 @@
 \newcommand{\jlptSection}[1]{
   \section*{\uppercase{#1}}
 
-  \resizebox{\textwidth}{!}{
+  \begin{center}
+    \fontsize{16}{16}
     \input{./data/tables/#1.tex}
-  }
+  \end{center}
 
   \localtableofcontents
 
