@@ -1,7 +1,7 @@
 const fs = require('fs');
 
 /* Import local files */
-const {fetchKanjiFromTxt, fetchKanjiFromJisho} = require('./src/dataFetching.js');
+const {fetchKanjiFromTxt, fetchJishoBufferData, fetchKanjiFromJisho} = require('./src/dataFetching.js');
 const {getKanjiTexData} = require('./src/texConversion.js');
 const {kanjiTable} = require('./src/kanjiTables.js');
 
@@ -10,11 +10,24 @@ async function main(jlptLevel) {
 
   const jlptLevelCaps = jlptLevel.toUpperCase();
 
-  const kanjiArray = await fetchKanjiFromTxt(`./data/txt/${jlptLevel}.txt`);
-  console.log(`${jlptLevelCaps}: Fetched txt`);
+  /* Fetch data from buffer if available.
+  *  Else fetch data from txt and jisho requests,
+  *  and make buffer files
+  */
+  if(fs.existsSync(`./data/jisho/${jlptLevel}.json`)) {
+    var jishoResults = await fetchJishoBufferData(`./data/jisho/${jlptLevel}.json`);
+    console.log(`${jlptLevelCaps}: Fetched Jisho data from buffer`);
 
-  const jishoResults = await fetchKanjiFromJisho(kanjiArray);
-  console.log(`${jlptLevelCaps}: Fetched Jisho data`);
+  } else {
+    const kanjiArray = await fetchKanjiFromTxt(`./data/txt/${jlptLevel}.txt`);
+    console.log(`${jlptLevelCaps}: Fetched txt`);
+  
+    var jishoResults = await fetchKanjiFromJisho(kanjiArray);
+    console.log(`${jlptLevelCaps}: Fetched Jisho data`);
+
+    fs.writeFile(`./data/jisho/${jlptLevel}.json`, JSON.stringify(jishoResults, null, " "), (err) => {if (err) console.error(err)});
+    console.log(`${jlptLevelCaps}: Written Jisho data to buffer`);
+  }
 
   const sortedKanjiArray = jishoResults.map(result => result.query);
   const texData = getKanjiTexData(jishoResults);

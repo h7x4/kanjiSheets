@@ -24,6 +24,7 @@ folders:
 	mkdir data/pages
 	mkdir data/tables
 	mkdir data/testing
+	mkdir data/jisho
 	cd jishoScrape
 	npm install
 	cd ..

@@ -1,10 +1,15 @@
+#LaTeX output files
 main.out
 main.log
 main.aux
 main.synctex.gz
 main.toc
 
+#Data to be reprocessed
 data/testing/
 data/pages/
 data/tables/
+data/jisho
+
+#Libraries
 jishoScrape/node_modules

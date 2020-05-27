@@ -6,7 +6,7 @@ const jisho = new jishoApi();
 /**
  * Reads a txt file and splits the characters into an array
  * @param {string} file Path to file
- * @returns {string[]} Kanji
+ * @returns {string[]} A list of Kanji
  */
 async function fetchKanjiFromTxt(file) {
   const read = util.promisify(fs.readFile);
@@ -15,9 +15,20 @@ async function fetchKanjiFromTxt(file) {
 }
 
 /**
+ * Reads a json file and returns the data as an object
+ * @param {string} file Path to file
+ * @returns {object} Jisho results
+ */
+async function fetchJishoBufferData(file) {
+  const read = util.promisify(fs.readFile);
+  const data = await read(file, 'utf8');
+  return JSON.parse(data);
+}
+
+/**
  * Makes a delayed kanji search request in order not to overload the server.
- * @param {string} kanji The character to search for
- * @param {number} delay Number of milliseconds delay to the request
+ * @param {string} kanji A character to search for
+ * @param {number} delay A number of milliseconds delay to the request
  * @return {promise} A promise that's going to run a request after the specified delay
  */
 async function delayedJishoCall(kanji, delay) {
@@ -43,4 +54,5 @@ async function fetchKanjiFromJisho(kanjiArray) {
 }
 
 exports.fetchKanjiFromTxt = fetchKanjiFromTxt;
+exports.fetchJishoBufferData = fetchJishoBufferData;
 exports.fetchKanjiFromJisho = fetchKanjiFromJisho;
