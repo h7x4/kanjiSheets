@@ -8,6 +8,10 @@ function getKanjiTexData(kanjiArray) {
     const kunyomi = textFiltration.convertKunyomi(kanji);
     const onyomi = textFiltration.convertOnyomi(kanji);
 
+    kanji.taughtIn = kanji.taughtIn ? 
+      kanji.taughtIn.charAt(0).toUpperCase() + kanji.taughtIn.slice(1)
+      : '';
+
     return {
       kanji: kanji.query,
       kanjiPageHeader: `\\kanjiPageHeader{${kanji.query}}{${kanji.taughtIn}}{${kanji.jlptLevel}}{${kanji.strokeCount}}{${kanji.radical.symbol}}`,
