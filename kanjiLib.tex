@@ -94,6 +94,12 @@
   right=15pt,
   top=15pt,
   bottom=15pt,
+  arc=0pt,
+  outer arc=0pt,
+  attach boxed title to top center={yshift=-12pt, yshifttext=-6pt},
+  title={\fontsize{15}{20}\textcolor{white}{\textbf{意味}}},
+  colbacktitle=black!60,
+  boxed title style={arc=0pt, outer arc=0pt}
 }
 
 \newcommand{\kanjiMeaning}[1]{
@@ -170,7 +176,7 @@
       \clip (-0.1,-0.1) rectangle (14.1,6.1);
 
       % Main Frame
-      \draw[line width=1.6pt, rounded corners=4pt] (0, 0) rectangle (14, 6);
+      \draw[line width=1.6pt] (0, 0) rectangle (14, 6);
 
       % Horizontal lines
       \draw (0,2) -- (14,2);
