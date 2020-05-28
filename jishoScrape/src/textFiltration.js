@@ -1,4 +1,4 @@
-const yomiBrackets = ['\\textbf{\\textcolor{myGreen!80!black}{', '}}'];
+const yomiBrackets = ['\\textbf{\\textcolor{kanjiColor!80!black}{', '}}'];
 const yomiConnector = '、 ';
 const yomiDash = '—';
 

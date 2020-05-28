@@ -3,7 +3,10 @@
 \usepackage{anyfontsize}
 \usepackage{tikz}
 
-\definecolor{myGreen}{RGB}{72, 194, 78}
+\definecolor{kanjiColor}{RGB}{72, 194, 78}
+\colorlet{kunyomiColor}{blue}
+\colorlet{onyomiColor}{red}
+\colorlet{meaningColor}{black}
 
 % ---------------------------------------------------------------------------- %
 %                                 JLPT Section                                 %
@@ -54,7 +57,7 @@
   \begin{center}
       \resizebox{\textwidth}{!}{
         \begin{tikzpicture}
-          \fill[rounded corners=2pt, fill=myGreen, draw=black] (0,0) rectangle (1,1);
+          \fill[rounded corners=2pt, fill=kanjiColor, draw=black] (0,0) rectangle (1,1);
           \draw (0.5,0.23) node[white, anchor=base, scale=2]{#1};
         \end{tikzpicture}
     }
@@ -101,7 +104,7 @@
   tcbox width=auto limited,
   capture=hbox,
   enhanced,
-  colback=black!20,
+  colback=meaningColor!20,
   left=15pt,
   right=15pt,
   top=15pt,
@@ -110,7 +113,7 @@
   outer arc=0pt,
   attach boxed title to top center={yshift=-12pt, yshifttext=-6pt},
   title={\fontsize{15}{20}\textcolor{white}{\textbf{意味}}},
-  colbacktitle=black!60,
+  colbacktitle=meaningColor!60,
   boxed title style={arc=0pt, outer arc=0pt}
 }
 
@@ -129,14 +132,14 @@
 \newtcolorbox{kunyomiBox}{
   enhanced,
   attach boxed title to top left={yshift=-12pt,xshift=10pt},
-  colback=blue!20,
-  colframe=blue!60,
+  colback=kunyomiColor!20,
+  colframe=kunyomiColor!60,
   left=15pt,
   right=15pt,
   top=15pt,
   bottom=5pt,
   title={\fontsize{15}{20}\textcolor{white}{\textbf{訓読み}}},
-  colbacktitle=blue!60,
+  colbacktitle=kunyomiColor!60,
   width=\textwidth
 }
 
@@ -150,21 +153,21 @@
 \newtcolorbox{onyomiBox}{
   enhanced,
   attach boxed title to top left={yshift=-12pt,xshift=10pt},
-  colback=red!20,
-  colframe=red!60,
+  colback=onyomiColor!20,
+  colframe=onyomiColor!60,
   left=15pt,
   right=15pt,
   top=15pt,
   bottom=5pt,
   title={\fontsize{15}{20}\textcolor{white}{\textbf{音読み}}},
-  colbacktitle=red!60,
+  colbacktitle=onyomiColor!60,
   width=\textwidth,
 }
 
 \newcommand{\onyomi}[1]{
   \begin{onyomiBox}
     \fontsize{15}{20}
-    \textbf{\textcolor{myGreen!80!black}{#1}}
+    \textbf{\textcolor{kanjiColor!80!black}{#1}}
   \end{onyomiBox}
   \vspace{0.5cm}
 }
