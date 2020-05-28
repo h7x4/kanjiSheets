@@ -1,5 +1,5 @@
+\usepackage[table]{xcolor}
 \usepackage[most]{tcolorbox}
-\usepackage{xcolor}
 \usepackage{anyfontsize}
 \usepackage{tikz}
 
@@ -21,6 +21,18 @@
 
   \break
 }
+
+% ---------------------------------------------------------------------------- %
+%                                  Kanji Table                                 %
+% ---------------------------------------------------------------------------- %
+
+\newenvironment{kanjiTable}[1]
+  {
+    \begin{longtable}{#1}
+  }
+  {
+    \end{longtable}
+  }
 
 % ---------------------------------------------------------------------------- %
 %                                  Header line                                 %
