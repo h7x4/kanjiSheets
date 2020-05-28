@@ -7,6 +7,6 @@ TODO:
   [ ] Rename functions and files
   [ ] Document functions and files
   [ ] *Add .- logic in jishoScrape/src/textFiltration.js* 
-  [ ] *Fix hbox*
+  [√] *Fix hbox*
   [ ] Fix makefile
   [ ] Clean code

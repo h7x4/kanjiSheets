@@ -85,16 +85,15 @@
 %                                    Meaning                                   %
 % ---------------------------------------------------------------------------- %
 
-\newtcolorbox{meaningBox}{ %TODO: Make the box autoshrink horizontally while still making newlines when it's full.
+\newtcolorbox{meaningBox}{
+  tcbox width=auto limited,
+  capture=hbox,
   enhanced,
   colback=black!20,
   left=15pt,
   right=15pt,
   top=15pt,
   bottom=15pt,
-  width=\textwidth,
-  hbox,
-  capture=minipage
 }
 
 \newcommand{\kanjiMeaning}[1]{
