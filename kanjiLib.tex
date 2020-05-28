@@ -1,5 +1,5 @@
 \usepackage[table]{xcolor}
-\usepackage[most]{tcolorbox}
+\usepackage[many]{tcolorbox}
 \usepackage{anyfontsize}
 \usepackage{tikz}
 
@@ -12,12 +12,18 @@
 %                                 JLPT Section                                 %
 % ---------------------------------------------------------------------------- %
 
-\newcommand{\jlptSection}[1]{
-  \section*{\uppercase{#1}}
+\setcounter{secnumdepth}{0}
+
+\newcommand{\jlptSection}[2]{
+  % For some reason, I'm not able to use \uppercase in order to use
+  % a single argument. In the end, I found that just using two arguments
+  % was going to be easier than trying to override the way the LaTeX
+  % kernel handles this command.
+  \section{#1}
 
   \begin{center}
     \fontsize{16}{16}
-    \input{./data/tables/#1.tex}
+    \input{./data/tables/#2.tex}
   \end{center}
 
   \localtableofcontents
