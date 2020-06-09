@@ -8,7 +8,7 @@ function makeNumberRow(xLength) {
   return `${numberRow.join(' & ')} \\\\\n\\hline\n\\endhead\n`;
 }
 
-function kanjiRow(index, kanjiArray) {
+function kanjiRow(index, rowLength, kanjiArray) {
   let result = [];
   for (let rowIndex = 0; rowIndex < rowLength; rowIndex++) {
     const currentIndex = index + rowIndex;
@@ -20,14 +20,14 @@ function kanjiRow(index, kanjiArray) {
 function makeRows(rowLength, columnLength, kanjiArray) {
   let result = '';
   for (let columnIndex = 0; columnIndex < columnLength; columnIndex++) {
-    const line = new Array;
+    let line = new Array;
     const index = columnIndex * rowLength;
 
     // Add the number of current character
     line.push(`{\\large ${index}}`);
 
     // Concatenate the number with the rest of the row
-    line = [line, kanjiRow(index, kanjiArray)];
+    line = [line, kanjiRow(index, rowLength, kanjiArray)];
 
     // Convert the line array into a tex row and add it to result.
     result += `${line.join(' & ')} \\\\\n`;
