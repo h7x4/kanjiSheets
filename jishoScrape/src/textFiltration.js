@@ -1,12 +1,36 @@
-const yomiBrackets = ['\\textbf{\\textcolor{kanjiColor!80!black}{', '}}'];
+const stylingBrackets = {
+  "start": '\\textbf{\\textcolor{kanjiColor!80!black}{',
+  "end": '}}'
+};
 const yomiConnector = '、 ';
 const yomiDash = '—';
 
-function convertKunyomi(res) {
+const styleText = (string) => stylingBrackets.start + string + stylingBrackets.end;
 
-  if (res.kunyomi.length === 0) return '';
+function styleCharactersBeforeDot(string) {
+  const words = string.split('.');
+  words[0] = styleText(words[0]);
+  return words.join('');
+}
 
-  const kunyomi = JSON.stringify(res.kunyomi)
+function styleEverythingExceptDash(string) {
+  const words = string.split(/(?<=\-)/);
+  if (words[0] === '-') { // ['-', 'word']
+    words[0] = yomiDash;
+    words[1] = styleText(words[1]);
+  } else {               // ['Word-', '']
+    words[1] = yomiDash;
+    words[0] = words[0].slice(0, words[0].length-1);
+    words[0] = styleText(words[0]);
+  }
+  return words.join('');
+}
+
+function convertKunyomi(jishoResult) {
+
+  if (jishoResult.kunyomi.length === 0) return '';
+
+  const kunyomi = JSON.stringify(jishoResult.kunyomi)
     .replace(/"|\[|\]/g, '')
     .replace(/\\/g, '\\\\')
     .replace(/%/g, '\\%')
@@ -20,41 +44,32 @@ function convertKunyomi(res) {
       //TODO: Apply combinated logic here
     }
     else if (instance.includes('.')) {
-      const words = instance.split('.');
-      words[0] = yomiBrackets[0] + words[0] + yomiBrackets[1];
-      kunyomi[i] = words.join('');
+      kunyomi[i] = styleCharactersBeforeDot(instance);
     }
     else if (instance.includes('-')) {
-      const words = instance.split(/(?<=\-)/);
-      if (words[0] == '-') { // ['-', 'word']
-        words[0] = yomiDash;
-        words[1] = yomiBrackets[0] + words[1] + yomiBrackets[1];
-      } else {               // ['Word-', '']
-        words[1] = yomiDash;
-        words[0] = words[0].slice(0, words[0].length-1);
-        words[0] = yomiBrackets[0] + words[0] + yomiBrackets[1];
-      }
-      kunyomi[i] = words.join('');
+      kunyomi[i] = styleEverythingExceptDash(instance);
     }
     else {
-      kunyomi[i] = yomiBrackets[0] + instance + yomiBrackets[1];
+      kunyomi[i] = styleText(instance);
     }
   }
 
   return kunyomi.join(yomiConnector);
 }
 
-function convertOnyomi(res) {
-  return JSON.stringify(res.onyomi)
+function convertOnyomi(jishoResult) {
+  return JSON.stringify(jishoResult.onyomi)
     .replace(/"|\[|\]/g, '')
     .replace(/\\/g, '\\\\')
     .replace(/%/g, '\\%')
     .replace(/,/g, yomiConnector)
     .replace(/&/g, '\\&');
+
+    //TODO: Style only the words, and not the yomiConnector inbetween
 }
 
-function convertMeaning(res) {
-  return res.meaning
+function convertMeaning(jishoResult) {
+  return jishoResult.meaning
     .replace(/\\/g, '\\\\')
     .replace(/%/g, '\\%')
     .replace(/&/g, '\\&');

@@ -3,7 +3,7 @@ const fs = require('fs');
 /* Import local files */
 const {fetchKanjiFromTxt, fetchJishoBufferData, fetchKanjiFromJisho} = require('./src/dataFetching.js');
 const {getKanjiTexData} = require('./src/texConversion.js');
-const {kanjiTable} = require('./src/kanjiTables.js');
+const {chapterTabular} = require('./src/kanjiTables.js');
 
 function log(message, jlptLevel) {
   const jlptLevelCaps = jlptLevel.toUpperCase();
@@ -20,7 +20,7 @@ async function main(jlptLevel) {
   const texData = getKanjiTexData(jishoResults);
 
   log('Generating chapter table page', jlptLevel);
-  const resultTable = kanjiTable(kanjiArray);
+  const chapterTable = chapterTabular(kanjiArray, 16);
 
   let resultPage = '';
   for (kanji of texData) {
@@ -32,7 +32,7 @@ async function main(jlptLevel) {
       \\newpage\n`;
   }
 
-  fs.writeFile(`./data/tables/${jlptLevel}.tex`, resultTable, (err) => {if (err) console.error(err)});
+  fs.writeFile(`./data/tables/${jlptLevel}.tex`, chapterTable, (err) => {if (err) console.error(err)});
   fs.writeFile(`./data/pages/${jlptLevel}.tex`, resultPage, (err) => {if (err) console.error(err)});
 }
 

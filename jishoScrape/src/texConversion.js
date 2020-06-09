@@ -1,24 +1,27 @@
 const textFiltration = require('./textFiltration.js')
 
-/* Process result array into object with LaTeX strings */
-function getKanjiTexData(kanjiArray) {
-  return kanjiArray.map(kanji => {
+const makeFirstLetterUppercase = (string) => string.charAt(0).toUpperCase() + string.slice(1);
 
-    const meaning = textFiltration.convertMeaning(kanji);
-    const kunyomi = textFiltration.convertKunyomi(kanji);
-    const onyomi = textFiltration.convertOnyomi(kanji);
+/**
+ * Generate TeX strings from Jisho data
+ * @param {object[]} jishoResults Array of results fetched from Jisho
+ * @returns {object} An object containg TeX strings
+ */
+function getKanjiTexData(jishoResults) {
+  return jishoResults.map(jishoResult => {
 
-    kanji.taughtIn = kanji.taughtIn ? 
-      kanji.taughtIn.charAt(0).toUpperCase() + kanji.taughtIn.slice(1)
-      : '';
+    const meaning = textFiltration.convertMeaning(jishoResult);
+    const kunyomi = textFiltration.convertKunyomi(jishoResult);
+    const onyomi = textFiltration.convertOnyomi(jishoResult);
+
+    jishoResult.taughtIn = jishoResult.taughtIn ? makeFirstLetterUppercase(jishoResult.taughtIn) : '';
 
     return {
-      kanji: kanji.query,
-      kanjiPageHeader: `\\kanjiPageHeader{${kanji.query}}{${kanji.taughtIn}}{${kanji.jlptLevel}}{${kanji.strokeCount}}{${kanji.radical.symbol}}`,
+      kanjiPageHeader: `\\kanjiPageHeader{${jishoResult.query}}{${jishoResult.taughtIn}}{${jishoResult.jlptLevel}}{${jishoResult.strokeCount}}{${jishoResult.radical.symbol}}`,
       kanjiMeaning: meaning ? `\\kanjiMeaning{${meaning}}` : '',
       kunyomi: kunyomi ? `\\kunyomi{${kunyomi}}` : '',
       onyomi: onyomi ? `\\onyomi{${onyomi}}` : '',
-      kanjiRow: `\\kanjiRow{${kanji.query}}`
+      kanjiRow: `\\kanjiRow{${jishoResult.query}}`
     }
 
   });
