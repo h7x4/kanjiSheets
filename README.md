@@ -5,4 +5,4 @@ Based on data from [Jisho.org](https://jisho.org)
 
 Example page:
 
-![example-page](https://user-images.githubusercontent.com/14929991/83134628-ed278800-a0e4-11ea-8269-c3f3b200fb77.png)
+![example-page](https://user-images.githubusercontent.com/14929991/84199907-3513bb00-aaa6-11ea-9961-73ec1eba684e.png)
