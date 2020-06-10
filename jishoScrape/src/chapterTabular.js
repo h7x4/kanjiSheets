@@ -1,9 +1,12 @@
 function makeNumberRow(rowLength) {
-  let numberRow = [...Array(rowLength).keys()]; // Array containing numbers 0 to rowLength -1
+  let numberRow = [...Array(rowLength).keys()]; // Array containing numbers 0 to rowLength-1
   numberRow = numberRow.map((number) => (number + 1).toString()); // Correct numbers and convert to string
   numberRow = numberRow.map((number) => `{\\large ${number}}`); // Encapsulate numbers in TeX code
   numberRow = [' ', ...numberRow];
-  return `${numberRow.join(' & ')} \\\\\n\\hline\n\\endhead\n`;
+  return `
+  ${numberRow.join(' & ')} \\\\
+  \\hline
+  \\endhead\n`;
 }
 
 function kanjiRow(index, rowLength, kanjiArray) {
@@ -25,7 +28,7 @@ function makeRows(rowLength, columnLength, kanjiArray) {
     line.push(`{\\large ${index}}`);
 
     // Concatenate the number with the rest of the row
-    line = [line, kanjiRow(index, rowLength, kanjiArray)];
+    line = [...line, ...kanjiRow(index, rowLength, kanjiArray)];
 
     // Convert the line array into a tex row and add it to result.
     result += `${line.join(' & ')} \\\\\n`;
@@ -48,7 +51,7 @@ function chapterTabular(kanjiArray, rowLength) {
   tabularString += makeNumberRow(rowLength);
   tabularString += makeRows(rowLength, columnLength, kanjiArray);
 
-  return `\\begin{chapterTabular}{ ${'l | ' + 'l '.repeat(rowLength)}}
+  return `\\begin{chapterTabular}{ ${' l | ' + 'l '.repeat(rowLength)}}
 ${tabularString}\\end{chapterTabular}`
 }
 

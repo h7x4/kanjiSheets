@@ -18,7 +18,7 @@ async function main(grade) {
   const kanjiArray = jishoResults.map(result => result.query);
 
   log('Generating tex pages');
-  const texData = getKanjiTexData(jishoResults);
+  const texData = getKanjiTexData(jishoResults, grade);
 
   log('Generating chapter table page');
   const chapterTable = chapterTabular(kanjiArray, 16);

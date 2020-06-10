@@ -5,7 +5,7 @@ const stylingBrackets = {
 const yomiConnector = '、 ';
 const yomiDash = '—';
 
-const styleText = (string) => stylingBrackets.start + string + stylingBrackets.end;
+const styleText = (string) => `\\emphasize{${string}}`;
 
 function styleCharactersBeforeDot(string) {
   const words = string.split('.');
@@ -80,19 +80,22 @@ const makeFirstLetterUppercase = (string) => string.charAt(0).toUpperCase() + st
 /**
  * Generate TeX strings from Jisho data
  * @param {object[]} jishoResults Array of results fetched from Jisho
+ * @param {string} grade 
  * @returns {object} An object containg TeX strings
  */
-function getKanjiTexData(jishoResults) {
+function getKanjiTexData(jishoResults, grade) {
   return jishoResults.map(jishoResult => {
 
     const meaning = convertMeaning(jishoResult);
     const kunyomi = convertKunyomi(jishoResult);
     const onyomi = convertOnyomi(jishoResult);
 
-    jishoResult.taughtIn = jishoResult.taughtIn ? makeFirstLetterUppercase(jishoResult.taughtIn) : '';
+    grade = grade.slice(0,5) + ' ' + grade.slice(5);
+    grade = makeFirstLetterUppercase(grade);
+    if (grade === 'Grade 7') grade = 'Junior high'
 
     return {
-      kanjiPageHeader: `\\kanjiPageHeader{${jishoResult.query}}{${jishoResult.taughtIn}}{${jishoResult.jlptLevel}}{${jishoResult.strokeCount}}{${jishoResult.radical.symbol}}`,
+      kanjiPageHeader: `\\kanjiPageHeader{${jishoResult.query}}{${grade}}{${jishoResult.jlptLevel}}{${jishoResult.strokeCount}}{${jishoResult.radical.symbol}}`,
       kanjiMeaning: meaning ? `\\kanjiMeaning{${meaning}}` : '',
       kunyomi: kunyomi ? `\\kunyomi{${kunyomi}}` : '',
       onyomi: onyomi ? `\\onyomi{${onyomi}}` : '',
