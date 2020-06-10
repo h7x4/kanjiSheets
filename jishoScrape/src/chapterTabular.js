@@ -1,5 +1,3 @@
-
-
 function makeNumberRow(rowLength) {
   let numberRow = [...Array(rowLength).keys()]; // Array containing numbers 0 to rowLength -1
   numberRow = numberRow.map((number) => (number + 1).toString()); // Correct numbers and convert to string
@@ -35,7 +33,6 @@ function makeRows(rowLength, columnLength, kanjiArray) {
 
   return result;
 }
-
 
 /**
  * Turns an array of kanji into a tabular for a chapter overview

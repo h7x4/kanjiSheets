@@ -3,7 +3,7 @@ const fs = require('fs');
 /* Import local files */
 const { fetchJishoResults } = require('./src/dataFetching.js');
 const { getKanjiTexData } = require('./src/texConversion.js');
-const { chapterTabular } = require('./src/kanjiTables.js');
+const { chapterTabular } = require('./src/chapterTabular.js');
 
 /* Encapsulate main process in async function */
 async function main(grade) {
