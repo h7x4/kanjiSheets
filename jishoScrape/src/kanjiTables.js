@@ -1,9 +1,9 @@
 
 
-function makeNumberRow(xLength) {
-  let numberRow = [...Array(xLength).keys()];
-  numberRow = numberRow.map((number) => (number + 1).toString());
-  numberRow = numberRow.map((number) => `{\\large ${number}}`);
+function makeNumberRow(rowLength) {
+  let numberRow = [...Array(rowLength).keys()]; // Array containing numbers 0 to rowLength -1
+  numberRow = numberRow.map((number) => (number + 1).toString()); // Correct numbers and convert to string
+  numberRow = numberRow.map((number) => `{\\large ${number}}`); // Encapsulate numbers in TeX code
   numberRow = [' ', ...numberRow];
   return `${numberRow.join(' & ')} \\\\\n\\hline\n\\endhead\n`;
 }
@@ -40,6 +40,7 @@ function makeRows(rowLength, columnLength, kanjiArray) {
 /**
  * Turns an array of kanji into a tabular for a chapter overview
  * @param {string[]} kanjiArray An array of kanji characters to put into the tabular
+ * @param {number} rowLength The length of each row
  * @returns {string} A tex tabular
  */
 function chapterTabular(kanjiArray, rowLength) {

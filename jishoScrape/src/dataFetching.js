@@ -3,56 +3,67 @@ const util = require('util');
 const jishoApi = require('unofficial-jisho-api');
 const jisho = new jishoApi();
 
-/**
- * Reads a txt file and splits the characters into an array
- * @param {string} file Path to file
- * @returns {string[]} A list of Kanji
- */
-async function fetchKanjiFromTxt(file) {
-  const read = util.promisify(fs.readFile);
-  const data = await read(file, 'utf8');
-  return data.split('');
+const txtFolder = './data/jouyou/';
+const jishoBufferFolder = './data/jisho/';
+
+/* Async version of fs.readFile */
+const readFile = util.promisify(fs.readFile);
+
+async function fetchCharactersFromTxt(file) {
+  const data = await readFile(file, 'utf8');
+  return [...data];
 }
 
-/**
- * Reads a json file and returns the data as an object
- * @param {string} file Path to file
- * @returns {object} Jisho results
- */
-async function fetchJishoBufferData(file) {
-  const read = util.promisify(fs.readFile);
-  const data = await read(file, 'utf8');
+async function fetchBufferedJishoResults(file) {
+  const data = await readFile(file, 'utf8');
   return JSON.parse(data);
 }
 
-/**
- * Makes a delayed kanji search request in order not to overload the server.
- * @param {string} kanji A character to search for
- * @param {number} delay A number of milliseconds delay to the request
- * @return {promise} A promise that's going to run a request after the specified delay
- */
-async function delayedJishoCall(kanji, delay) {
+async function makeDelayedJishoRequest(kanji, delay) {
   return new Promise((res, rej) => {
-    setTimeout(() => {
-      res(jisho.searchForKanji(kanji));
-    }, delay);
-  })
+    setTimeout(() => { res(jisho.searchForKanji(kanji)); }, delay);
+  });
 }
 
-/* Sort list of result array */
-const sortKanji = (kanjiData) => kanjiData.sort((a, b) => (a.strokeCount > b.strokeCount) ? 1 : -1);
+/* Sort array of jisho results based on stroke count */
+const sortJishoResults = (jishoResult) => jishoResult.sort((a, b) => (a.strokeCount > b.strokeCount) ? 1 : -1);
 
-/**
- * Searches for kanji with a 50ms interval between each request.
- * @param {string[]} kanjiArray A list of kanji to search for.
- * @returns {object} JSON data containing a sorted list of search responses.
- */
+/* Fetches Jisho results with a delay of 50ms between each request */
 async function fetchKanjiFromJisho(kanjiArray) {
-  const promises = kanjiArray.map(async (kanji, i) => await delayedJishoCall(kanji, i*50));
-  const data = await Promise.all(promises);
-  return sortKanji(data);
+  const delayedRequests = kanjiArray.map(async (kanji, i) => await makeDelayedJishoRequest(kanji, i*50));
+  const data = await Promise.all(delayedRequests);
+  return sortJishoResults(data);
 }
 
-exports.fetchKanjiFromTxt = fetchKanjiFromTxt;
-exports.fetchJishoBufferData = fetchJishoBufferData;
-exports.fetchKanjiFromJisho = fetchKanjiFromJisho;
+
+async function fetchJishoDataAndWriteToBuffer(grade) {
+  const kanjiArray = await fetchCharactersFromTxt(`${txtFolder}${grade}.txt`);
+  const jishoResults = await fetchKanjiFromJisho(kanjiArray);
+  fs.writeFile(
+    `${jishoBufferFolder}${grade}.json`,
+    JSON.stringify(jishoResults, null, " "),
+    (err) => { if (err) console.error(err) }
+  );
+  return jishoResults;
+}
+
+  /** 
+   * Handles fetching and storing the data from Jisho
+   * @param {string} grade The grade of the kanji set
+   * @param {function} log A custom log function
+   * @returns {object} Jisho results 
+  */
+async function fetchJishoResults(grade, log) {
+
+  const bufferFileExists = fs.existsSync(`${jishoBufferFolder}${grade}.json`);
+
+  if(bufferFileExists) {
+    log('Fetching Jisho data from buffer', grade)
+    return await fetchBufferedJishoResults(`${jishoBufferFolder}${grade}.json`);
+  } else {
+    log('Fetching data from Jisho and writing to buffer', grade)
+    return await fetchJishoDataAndWriteToBuffer(grade);
+  }
+}
+
+exports.fetchJishoResults = fetchJishoResults;

@@ -1,25 +1,26 @@
 const fs = require('fs');
 
 /* Import local files */
-const {fetchKanjiFromTxt, fetchJishoBufferData, fetchKanjiFromJisho} = require('./src/dataFetching.js');
-const {getKanjiTexData} = require('./src/texConversion.js');
-const {chapterTabular} = require('./src/kanjiTables.js');
-
-function log(message, jlptLevel) {
-  const jlptLevelCaps = jlptLevel.toUpperCase();
-  console.log(`${jlptLevelCaps}: ${message}`);
-}
+const { fetchJishoResults } = require('./src/dataFetching.js');
+const { getKanjiTexData } = require('./src/texConversion.js');
+const { chapterTabular } = require('./src/kanjiTables.js');
 
 /* Encapsulate main process in async function */
-async function main(jlptLevel) {
+async function main(grade) {
 
-  const jishoResults = await fetchJishoResults(jlptLevel);
+  /* Custom log function */
+  function log(message) {
+    const gradeCaps = grade.toUpperCase();
+    console.log(`${gradeCaps}: ${message}`);
+  }
+
+  const jishoResults = await fetchJishoResults(grade, log);
   const kanjiArray = jishoResults.map(result => result.query);
 
-  log('Generating tex pages', jlptLevel);
+  log('Generating tex pages');
   const texData = getKanjiTexData(jishoResults);
 
-  log('Generating chapter table page', jlptLevel);
+  log('Generating chapter table page');
   const chapterTable = chapterTabular(kanjiArray, 16);
 
   let resultPage = '';
@@ -32,39 +33,23 @@ async function main(jlptLevel) {
       \\newpage\n`;
   }
 
-  fs.writeFile(`./data/tables/${jlptLevel}.tex`, chapterTable, (err) => {if (err) console.error(err)});
-  fs.writeFile(`./data/pages/${jlptLevel}.tex`, resultPage, (err) => {if (err) console.error(err)});
-}
-
-  /** Fetch data from buffer if available.
-  *  Else fetch data from txt and jisho requests,
-  *  and make buffer files
-  */
-async function fetchJishoResults(jlptLevel) {
-
-  const bufferFileExists = fs.existsSync(`./data/jisho/${jlptLevel}.json`);
-
-  if(bufferFileExists) {
-    log('Fetching Jisho data from buffer', jlptLevel)
-    return await fetchJishoBufferData(`./data/jisho/${jlptLevel}.json`);
-  } else {
-    log('Fetching data from Jisho and writing to buffer', jlptLevel)
-    return await fetchJishoDataAndWriteToBuffer(jlptLevel);
-  }
-}
-
-async function fetchJishoDataAndWriteToBuffer(jlptLevel) {
-  const kanjiArray = await fetchKanjiFromTxt(`./data/txt/${jlptLevel}.txt`);
-  const jishoResults = await fetchKanjiFromJisho(kanjiArray);
-  fs.writeFile(`./data/jisho/${jlptLevel}.json`, JSON.stringify(jishoResults, null, " "), (err) => {if (err) console.error(err)});
-  return jishoResults;
+  fs.writeFile(
+    `./data/tables/${grade}.tex`,
+    chapterTable,
+    (err) => { if (err) console.error(err) }
+    );
+  fs.writeFile(
+    `./data/pages/${grade}.tex`,
+    resultPage,
+    (err) => { if (err) console.error(err) }
+  );
 }
 
 /* Handle args */
 async function argWrapper() {
 
   try {
-    if (!/n\d/.test(process.argv[2])) throw 'Input not valid';
+    if (!/grade\d/.test(process.argv[2])) throw 'Input not valid';
     await main(process.argv[2]);
   } catch (error) {
     console.error(error);

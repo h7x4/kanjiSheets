@@ -1,7 +1,7 @@
 .DEFAULT_GOAL := main.pdf
 
 main.pdf: main.tex jishoScrape/index.js title/titlepage.tex $(wildcard data/pages/*) $(wildcard data/tables/*)
-	for i in $$(seq 5 -1 1); do node jishoScrape/index.js n$$i; done
+	for i in $$(seq 7); do node jishoScrape/index.js grade$$i; done
 	xelatex main.tex
 
 #TODO: Make this modular, fix the index.js target.
