@@ -1,41 +1,40 @@
-function makeNumberRow(rowLength) {
-  let numberRow = [...Array(rowLength).keys()]; // Array containing numbers 0 to rowLength-1
-  numberRow = numberRow.map((number) => (number + 1).toString()); // Correct numbers and convert to string
-  numberRow = numberRow.map((number) => `{\\large ${number}}`); // Encapsulate numbers in TeX code
-  numberRow = [' ', ...numberRow];
+
+const makeNumberRow = (length) => {
+	const numberRow = [ ' ',
+										  ...[...Array(length).keys()]
+										    .map(num => `{\\large ${num+1}}`),
+  									  ' ' ].join(' & ');
   return `
-  ${numberRow.join(' & ')} \\\\
+  ${numberRow} \\\\
   \\hline
   \\endhead\n`;
 }
 
-function kanjiRow(index, rowLength, kanjiArray) {
-  let result = [];
-  for (let rowIndex = 0; rowIndex < rowLength; rowIndex++) {
-    const currentIndex = index + rowIndex;
-    result.push(kanjiArray[currentIndex] ? kanjiArray[currentIndex] : '');
-  }
-  return result;
+const lastNonEmptyChar = (chars) => {
+	let index = chars.length - 1;
+	while (chars[index] == '') index--;
+	return chars[index]
 }
 
-function makeRows(rowLength, columnLength, kanjiArray) {
-  let result = '';
-  for (let columnIndex = 0; columnIndex < columnLength; columnIndex++) {
-    let line = new Array;
-    const index = columnIndex * rowLength;
+const makeKanjiRow = (index, chars) => 
+			[ `{\\large ${index}}`,
+				...chars.map(chara => `\\hyperref[${chara}]{${chara}}`),
+				`p.\\pageref{${lastNonEmptyChar(chars)}}` ].join(' & ');
 
-    // Add the number of current character
-    line.push(`{\\large ${index}}`);
-
-    // Concatenate the number with the rest of the row
-    line = [...line, ...kanjiRow(index, rowLength, kanjiArray)];
-
-    // Convert the line array into a tex row and add it to result.
-    result += `${line.join(' & ')} \\\\\n`;
+const splitBy = (array, num) => {
+	let results = [];
+  while (array.length) {
+  	results.push(array.splice(0, num));
   }
-
-  return result;
+	results[results.length-1].length = num;
+	results[results.length-1] = Array.from(results[results.length-1], chara => chara || '');
+	return results;
 }
+
+const makeRows = (length, kanjiArray) =>
+	[ ...splitBy(kanjiArray, length)
+		  .map((row, i) => makeKanjiRow(i*length,row)),
+		'' ].join(' \\\\\n');
 
 /**
  * Turns an array of kanji into a tabular for a chapter overview
@@ -43,15 +42,15 @@ function makeRows(rowLength, columnLength, kanjiArray) {
  * @param {number} rowLength The length of each row
  * @returns {string} A tex tabular
  */
-function chapterTabular(kanjiArray, rowLength) {
-  const columnLength = Math.ceil(kanjiArray.length/rowLength);
+function chapterTabular(kanjiArray, length) {
+  // const height = Math.ceil(kanjiArray.length/length);
 
   let tabularString = '';
   
-  tabularString += makeNumberRow(rowLength);
-  tabularString += makeRows(rowLength, columnLength, kanjiArray);
+  tabularString += makeNumberRow(length);
+  tabularString += makeRows(length, kanjiArray);
 
-  return `\\begin{chapterTabular}{ ${' l | ' + 'l '.repeat(rowLength)}}
+  return `\\begin{chapterTabular}{ ${' l | ' + 'l '.repeat(length + 1)}}
 ${tabularString}\\end{chapterTabular}`
 }
 

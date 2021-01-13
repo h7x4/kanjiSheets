@@ -5,77 +5,77 @@ const stylingBrackets = {
 const yomiConnector = '、 ';
 const yomiDash = '—';
 
-const styleText = (string) => `\\emphasize{${string}}`;
+const regexes = [
+  [/"|\[|\]/g, ''], // Remove all []
+  [/\\/g, '\\\\'], // Escape \
+  [/%/g, '\\%'], //Escape %
+  [/&/g, '\\&'], // Escape &
+  [/,/g, yomiConnector] // convert all , to yomiConnector
+]
 
-function styleCharactersBeforeDot(string) {
+const styleText = string => `\\emphasize{${string}}`;
+
+// ab.c -> \emph{ab}.c
+const styleCharactersBeforeDot = string => {
   const words = string.split('.');
   words[0] = styleText(words[0]);
   return words.join('');
 }
 
-function styleEverythingExceptDash(string) {
-  const words = string.split(/(?<=\-)/);
-  if (words[0] === '-') { // ['-', 'word']
-    words[0] = yomiDash;
-    words[1] = styleText(words[1]);
-  } else {               // ['Word-', '']
-    words[1] = yomiDash;
-    words[0] = words[0].slice(0, words[0].length-1);
-    words[0] = styleText(words[0]);
+// abc- -> \emph{abc}-
+const styleEverythingExceptDash = string => {
+  const parts = string.split(/(?<=\-)/);
+  if (parts[0] === '-') { // ['-', 'abc']
+    parts[0] = yomiDash;
+    parts[1] = styleText(parts[1]);
+  } else {               // ['abc-', '']
+    parts[1] = yomiDash;
+    parts[0] = parts[0].slice(0, -1);
+    parts[0] = styleText(parts[0]);
   }
-  return words.join('');
+  return parts.join('');
 }
 
-function convertKunyomi(jishoResult) {
+const convertKunyomi = jishoResult =>
+  jishoResult.kunyomi.length === 0
+    ? ''
+    : JSON.stringify(jishoResult.kunyomi)
+      .replace(/"|\[|\]/g, '')
+      .replace(/\\/g, '\\\\')
+      .replace(/%/g, '\\%')
+      .replace(/&/g, '\\&')
+      .split(',')
+      .map(reading => {
+        if (reading.includes('.') && reading.includes('-'))
+						return `${yomiDash}${styleCharactersBeforeDot(reading.slice(1))}`
+        else if (reading.includes('.'))
+          return styleCharactersBeforeDot(reading);
+        else if (reading.includes('-'))
+          return styleEverythingExceptDash(reading);
+        else
+          return styleText(reading);
+      })
+      .join(yomiConnector);
 
-  if (jishoResult.kunyomi.length === 0) return '';
-
-  const kunyomi = JSON.stringify(jishoResult.kunyomi)
+const convertOnyomi = jishoResult =>
+  JSON.stringify(jishoResult.onyomi)
     .replace(/"|\[|\]/g, '')
     .replace(/\\/g, '\\\\')
     .replace(/%/g, '\\%')
     .replace(/&/g, '\\&')
-    .split(',');
-
-  for (const i in kunyomi) {
-    instance = kunyomi[i];
-
-    if (instance.includes('.') && instance.includes('-')) {
-      //TODO: Apply combinated logic here
-    }
-    else if (instance.includes('.')) {
-      kunyomi[i] = styleCharactersBeforeDot(instance);
-    }
-    else if (instance.includes('-')) {
-      kunyomi[i] = styleEverythingExceptDash(instance);
-    }
-    else {
-      kunyomi[i] = styleText(instance);
-    }
-  }
-
-  return kunyomi.join(yomiConnector);
-}
-
-function convertOnyomi(jishoResult) {
-  return JSON.stringify(jishoResult.onyomi)
-    .replace(/"|\[|\]/g, '')
-    .replace(/\\/g, '\\\\')
-    .replace(/%/g, '\\%')
-    .replace(/,/g, yomiConnector)
-    .replace(/&/g, '\\&');
+    .split(',')
+    .map(styleText)
+    .join(yomiConnector);
 
     //TODO: Style only the words, and not the yomiConnector inbetween
-}
 
-function convertMeaning(jishoResult) {
-  return jishoResult.meaning
+const convertMeaning = jishoResult => 
+  jishoResult.meaning
     .replace(/\\/g, '\\\\')
     .replace(/%/g, '\\%')
     .replace(/&/g, '\\&');
-}
 
-const makeFirstLetterUppercase = (string) => string.charAt(0).toUpperCase() + string.slice(1);
+const makeFirstLetterUppercase = string => string.charAt(0).toUpperCase() + string.slice(1);
 
 /**
  * Generate TeX strings from Jisho data
@@ -83,25 +83,26 @@ const makeFirstLetterUppercase = (string) => string.charAt(0).toUpperCase() + st
  * @param {string} grade 
  * @returns {object} An object containg TeX strings
  */
-function getKanjiTexData(jishoResults, grade) {
-  return jishoResults.map(jishoResult => {
+const getKanjiTexData = (jishoResults, grade) => {
+
+  grade = grade.slice(0,5) + ' ' + grade.slice(5); // graden -> grade n
+  grade = makeFirstLetterUppercase(grade);
+  if (grade === 'Grade 7') grade = 'Junior High';
+
+   return jishoResults.map(jishoResult => {
 
     const meaning = convertMeaning(jishoResult);
     const kunyomi = convertKunyomi(jishoResult);
     const onyomi = convertOnyomi(jishoResult);
 
-    grade = grade.slice(0,5) + ' ' + grade.slice(5);
-    grade = makeFirstLetterUppercase(grade);
-    if (grade === 'Grade 7') grade = 'Junior high'
-
     return {
       kanjiPageHeader: `\\kanjiPageHeader{${jishoResult.query}}{${grade}}{${jishoResult.jlptLevel}}{${jishoResult.strokeCount}}{${jishoResult.radical.symbol}}`,
+      label: `\\label{${jishoResult.query}}`,
       kanjiMeaning: meaning ? `\\kanjiMeaning{${meaning}}` : '',
       kunyomi: kunyomi ? `\\kunyomi{${kunyomi}}` : '',
       onyomi: onyomi ? `\\onyomi{${onyomi}}` : '',
       kanjiRow: `\\kanjiRow{${jishoResult.query}}`
     }
-
   });
 }
 

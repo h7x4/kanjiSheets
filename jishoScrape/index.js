@@ -26,6 +26,7 @@ async function main(grade) {
   let resultPage = '';
   for (kanji of texData) {
     resultPage+=`${kanji.kanjiPageHeader}
+      ${kanji.label}
       ${kanji.kanjiMeaning ? kanji.kanjiMeaning : ''}
       ${kanji.kunyomi ? kanji.kunyomi : ''}
       ${kanji.onyomi ? kanji.onyomi : ''}

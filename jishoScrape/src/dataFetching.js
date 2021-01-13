@@ -1,49 +1,40 @@
 const fs = require('fs');
 const util = require('util');
 const jishoApi = require('unofficial-jisho-api');
+
 const jisho = new jishoApi();
 
 const txtFolder = './data/jouyou/';
 const jishoBufferFolder = './data/jisho/';
 
-/* Async version of fs.readFile */
-const readFile = util.promisify(fs.readFile);
+const fetchCharactersFromTxt = file => [...fs.readFileSync(file, 'utf8')];
+const fetchBufferedJishoResults = file => JSON.parse(fs.readFileSync(file, 'utf8'));
 
-async function fetchCharactersFromTxt(file) {
-  const data = await readFile(file, 'utf8');
-  return [...data];
-}
-
-async function fetchBufferedJishoResults(file) {
-  const data = await readFile(file, 'utf8');
-  return JSON.parse(data);
-}
-
-async function makeDelayedJishoRequest(kanji, delay) {
-  return new Promise((res, rej) => {
-    setTimeout(() => { res(jisho.searchForKanji(kanji)); }, delay);
-  });
-}
+const makeDelayedJishoRequest = (kanji, delay) =>
+  new Promise(
+    (res, rej) => setTimeout(() => res(jisho.searchForKanji(kanji)), delay)
+  );
 
 /* Sort array of jisho results based on stroke count */
-const sortJishoResults = (jishoResult) => jishoResult.sort((a, b) => (a.strokeCount > b.strokeCount) ? 1 : -1);
+const sortJishoResults = jishoResult => jishoResult.sort((a, b) => a.strokeCount > b.strokeCount);
 
 /* Fetches Jisho results with a delay of 50ms between each request */
-async function fetchKanjiFromJisho(kanjiArray) {
-  const delayedRequests = kanjiArray.map(async (kanji, i) => await makeDelayedJishoRequest(kanji, i*50));
+const fetchKanjiFromJisho = async (kanjiArray) => {
+  const delayedRequests = kanjiArray.map((kanji, i) => makeDelayedJishoRequest(kanji, i*50));
   const data = await Promise.all(delayedRequests);
   return sortJishoResults(data);
 }
 
-
 async function fetchJishoDataAndWriteToBuffer(grade) {
-  const kanjiArray = await fetchCharactersFromTxt(`${txtFolder}${grade}.txt`);
+  const kanjiArray = fetchCharactersFromTxt(`${txtFolder}${grade}.txt`);
   const jishoResults = await fetchKanjiFromJisho(kanjiArray);
-  fs.writeFile(
+
+  fs.writeFileSync(
     `${jishoBufferFolder}${grade}.json`,
     JSON.stringify(jishoResults, null, " "),
     (err) => { if (err) console.error(err) }
   );
+
   return jishoResults;
 }
 
@@ -58,10 +49,10 @@ async function fetchJishoResults(grade, log) {
   const bufferFileExists = fs.existsSync(`${jishoBufferFolder}${grade}.json`);
 
   if(bufferFileExists) {
-    log('Fetching Jisho data from buffer', grade)
-    return await fetchBufferedJishoResults(`${jishoBufferFolder}${grade}.json`);
+    log('Fetching Jisho data from buffer', grade);
+    return fetchBufferedJishoResults(`${jishoBufferFolder}${grade}.json`);
   } else {
-    log('Fetching data from Jisho and writing to buffer', grade)
+    log('Fetching data from Jisho and writing to buffer', grade);
     return await fetchJishoDataAndWriteToBuffer(grade);
   }
 }

@@ -31,7 +31,7 @@
 
 \input{./kanjiLib.tex}
 
-\usepackage{etoc} % For local tocs containing level based kanji list.
+% \usepackage{etoc} % For local tocs containing level based kanji list.
 
 \begin{document}
 
@@ -43,7 +43,14 @@
 
   \break
 
-  \tableofcontents
+  \tocPiece{Grade 1}{grade1}
+  \tocPiece{Grade 2}{grade2}
+  \tocPiece{Grade 3}{grade3}
+  \tocPiece{Grade 4}{grade4}
+  \tocPiece{Grade 5}{grade5}
+  \tocPiece{Grade 6}{grade6}
+  \tocPiece{Junior High}{grade7}
+
   \break
 
   \section*{Preface}
@@ -60,21 +67,21 @@
   \input{./data/pages/grade1.tex}
 
   \chapterIntroduction{Grade 2}{grade2}
-  % \input{./data/pages/grade2.tex}
+  \input{./data/pages/grade2.tex}
 
   \chapterIntroduction{Grade 3}{grade3}
-  % \input{./data/pages/grade3.tex}
+  \input{./data/pages/grade3.tex}
 
   \chapterIntroduction{Grade 4}{grade4}
-  % \input{./data/pages/grade4.tex}
+  \input{./data/pages/grade4.tex}
 
   \chapterIntroduction{Grade 5}{grade5}
-  % \input{./data/pages/grade5.tex}
+  \input{./data/pages/grade5.tex}
 
   \chapterIntroduction{Grade 6}{grade6}
-  % \input{./data/pages/grade6.tex}
+  \input{./data/pages/grade6.tex}
 
   \chapterIntroduction{Junior High}{grade7}
-  % \input{./data/pages/grade7.tex}
+  \input{./data/pages/grade7.tex}
 
 \end{document}

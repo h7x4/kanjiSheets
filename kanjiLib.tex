@@ -12,9 +12,7 @@
 %                             Chapter Introduction                             %
 % ---------------------------------------------------------------------------- %
 
-\setcounter{secnumdepth}{0}
-
-\newcommand{\chapterIntroduction}[2]{
+\newcommand{\tocPiece}[2]{
   % For some reason, I'm not able to use \uppercase in order to use
   % a single argument. In the end, I found that just using two arguments
   % was going to be easier than trying to override the way the LaTeX
@@ -23,11 +21,15 @@
 
   \begin{center}
     \fontsize{16}{16}
+    \rowcolors{1}{}{kanjiColor!20!white}
     \input{./data/tables/#2.tex}
   \end{center}
+}
 
-  \localtableofcontents
+\setcounter{secnumdepth}{0}
 
+\newcommand{\chapterIntroduction}[2]{
+  \tocPiece{#1}{#2}
   \break
 }
 
