@@ -4,7 +4,7 @@
   "description": "",
   "main": "index.js",
   "dependencies": {
-    "unofficial-jisho-api": "^2.0.11"
+    "unofficial-jisho-api": "^2.3.4"
   },
   "devDependencies": {},
   "scripts": {
